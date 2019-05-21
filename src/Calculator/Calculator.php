@@ -4,7 +4,7 @@
  * Main calculator functionalities. Basic operations.
  */
 
-namespace App;
+namespace App\Calculator;
 
 use App\Exception\NegativeArgumentException;
 use App\Logger\Logger;

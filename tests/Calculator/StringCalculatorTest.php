@@ -4,9 +4,9 @@
  * Basic test suite for all calculator functionalities.
  */
 
-namespace Test;
+namespace Test\Calculator;
 
-use App\Calculator;
+use App\Calculator\Calculator;
 use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

@@ -4,9 +4,9 @@
  * Test suite for logging calculations.
  */
 
-namespace Test;
+namespace Test\Calculator;
 
-use App\Calculator;
+use App\Calculator\Calculator;
 use App\Logger\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
