@@ -98,6 +98,14 @@ class StringCalculatorTest extends TestCase
             'string' => "1\n2,3",
             'expected' => 6
         ];
+        yield 'custom delimeter' => [
+            'string' => "//;\n1;2",
+            'expected' => 3
+        ];
+        yield 'custom long delimeter' => [
+            'string' => "//;abc[\n6;abc[5",
+            'expected' => 11
+        ];
     }
 
     /**

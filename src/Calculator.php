@@ -21,9 +21,22 @@ class Calculator
     const MAIN_STRING_DELIMETER = ',';
 
     /**
-     * @var string[] all additional delimeters for spliiting numbers
+     * @var string delimeter used as default additional delimeter
      */
-    const STRING_DELIMETERS = ["\n"];
+    const DEFAULT_DELIMETER = "\n";
+
+    /**
+     * @var string $delimeter addition, custom delimeter, that may get changed
+     */
+    private $delimeter;
+
+    /**
+     * Calculator constructor.
+     */
+    public function __construct()
+    {
+        $this->delimeter = self::DEFAULT_DELIMETER;
+    }
 
     /**
      * Adds comma separated numbers.
@@ -55,9 +68,13 @@ class Calculator
      */
     private function prepareNumbers(string $numbers): array
     {
-        foreach (self::STRING_DELIMETERS as $delimeter) {
-            $numbers = str_replace($delimeter, self::MAIN_STRING_DELIMETER, $numbers);
-        }
+        // First we remove (optional) custom delimeter command and change delimeter.
+        $numbers = $this->handleCustomDelimeter($numbers);
+
+        // Next we unify both delimeters into main.
+        $numbers = str_replace($this->delimeter, self::MAIN_STRING_DELIMETER, $numbers);
+
+        // Lastly we explode numbers string into array.
         $numbers = explode(self::MAIN_STRING_DELIMETER, $numbers);
         $this->validateNumbers($numbers);
         foreach ($numbers as &$number) {
@@ -79,5 +96,32 @@ class Calculator
                 throw new InvalidArgumentException();
             }
         }
+    }
+
+    /**
+     * Handles change of delimeter and also removes command from numbers string.
+     *
+     * @param string $numbers input numbers with (optional) command
+     *
+     * @return string numbers without command
+     */
+    private function handleCustomDelimeter(string $numbers): string
+    {
+        // If there's no command, we simply return $numbers unchanged.
+        if ('//' !== substr($numbers, 0, 2)) {
+            return $numbers;
+        }
+
+        // Else we extract command (+1 in length is for compensating newline).
+        $command = substr($numbers, 0, strpos($numbers, "\n") + 1);
+
+        // We remove command from numbers string.
+        $numbers = str_replace($command, '', $numbers);
+
+        // We extract custom delimeter from command.
+        // Start is '//' and length is compensating for "\n".
+        $this->delimeter = substr($command, 2, -1);
+
+        return $numbers;
     }
 }
