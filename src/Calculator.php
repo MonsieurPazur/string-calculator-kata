@@ -90,11 +90,20 @@ class Calculator
      */
     private function validateNumbers(array $numbers): void
     {
+        $negatives = [];
         foreach ($numbers as $number) {
             // We don't allow empty arguments.
             if ('' === $number) {
                 throw new InvalidArgumentException();
             }
+
+            // Also don't allow negative numbers.
+            if ((int)$number < 0) {
+                $negatives[] = $number;
+            }
+        }
+        if (!empty($negatives)) {
+            throw new NegativeArgumentException($negatives);
         }
     }
 

@@ -59,6 +59,20 @@ class StringCalculatorTest extends TestCase
     }
 
     /**
+     * Tests input with negative numbers.
+     *
+     * @dataProvider negativeDataProvider
+     *
+     * @param string $string input with negative numbers
+     * @param string $expected exception message
+     */
+    public function testNegativeAdd(string $string, string $expected)
+    {
+        $this->expectExceptionMessage($expected);
+        $this->calculator->add($string);
+    }
+
+    /**
      * Provides test data for additions tests.
      * Input string and expected value after calculating.
      *
@@ -85,10 +99,6 @@ class StringCalculatorTest extends TestCase
         yield 'non-integer' => [
             'string' => '1.9',
             'expected' => 1
-        ];
-        yield 'negative numbers' => [
-            'string' => '-4,-9',
-            'expected' => -13
         ];
         yield 'high numbers' => [
             'string' => '456, 889',
@@ -123,6 +133,24 @@ class StringCalculatorTest extends TestCase
         yield 'all commas' => [
             'string' => ',,,,,',
             'expected' => InvalidArgumentException::class
+        ];
+    }
+
+    /**
+     * Provides test data with negative numbers in input string.
+     * Input string and expected exception message.
+     *
+     * @return Generator
+     */
+    public function negativeDataProvider()
+    {
+        yield 'single negative' => [
+            'string' => "-1",
+            'expected' => 'Negatives not allowed: -1'
+        ];
+        yield 'multiple negatives' => [
+            'string' => '-5,-7,-3',
+            'expected' => 'Negatives not allowed: -5, -7, -3'
         ];
     }
 }
