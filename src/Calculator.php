@@ -6,6 +6,7 @@
 
 namespace App;
 
+use App\Exception\NegativeArgumentException;
 use InvalidArgumentException;
 
 /**

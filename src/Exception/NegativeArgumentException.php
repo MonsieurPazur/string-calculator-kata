@@ -4,7 +4,7 @@
  * Custom exception for negative arguments passed in input string.
  */
 
-namespace App;
+namespace App\Exception;
 
 use InvalidArgumentException;
 
