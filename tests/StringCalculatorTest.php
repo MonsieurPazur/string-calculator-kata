@@ -124,6 +124,10 @@ class StringCalculatorTest extends TestCase
             'string' => "//[*][%]\n1*2%3",
             'expected' => 6
         ];
+        yield 'multiple short and long delimeters' => [
+            'string' => "//[abc][&&&]\n7abc2&&&3,7\n5",
+            'expected' => 24
+        ];
     }
 
     /**
