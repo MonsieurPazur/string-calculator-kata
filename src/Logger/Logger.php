@@ -33,7 +33,10 @@ class Logger
     {
         // Logger will log to default file if we won't force it.
         $filename = $filename ?: $this->getFilename();
-        fopen($filename, 'w');
+
+        $handle = fopen($filename, 'a');
+        fwrite($handle, $message);
+        fclose($handle);
     }
 
     /**

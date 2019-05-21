@@ -44,6 +44,19 @@ class LoggerTest extends TestCase
     }
 
     /**
+     * Tests whether logger writes messages to file.
+     */
+    public function testLoggerWritesMessages()
+    {
+        $this->logger->log('some message', self::TEST_FILE);
+
+        $handle = fopen(self::TEST_FILE, 'r');
+        $line = fgets($handle);
+        $this->assertEquals('some message', $line);
+        fclose($handle);
+    }
+
+    /**
      * Removes test file.
      */
     protected function tearDown(): void
