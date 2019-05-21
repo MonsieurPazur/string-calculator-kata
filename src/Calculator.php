@@ -31,6 +31,16 @@ class Calculator
     const MAXIMUM_NUMBER = 1000;
 
     /**
+     * @var string when at the beginning of input, informs us about delimeter change
+     */
+    const DELIMETER_COMMAND = '//';
+
+    /**
+     * @var string delimeter can be of any length, but has to follow format: [delimeter]
+     */
+    const LONG_DELIMETER_FORMAT = '/^(\[.*\])$/';
+
+    /**
      * @var string $delimeter addition, custom delimeter, that may get changed
      */
     private $delimeter;
@@ -124,7 +134,7 @@ class Calculator
     private function handleCustomDelimeter(string $numbers): string
     {
         // If there's no command, we simply return $numbers unchanged.
-        if ('//' !== substr($numbers, 0, 2)) {
+        if (self::DELIMETER_COMMAND !== substr($numbers, 0, 2)) {
             return $numbers;
         }
 
@@ -135,9 +145,28 @@ class Calculator
         $numbers = str_replace($command, '', $numbers);
 
         // We extract custom delimeter from command.
-        // Start is '//' and length is compensating for "\n".
-        $this->delimeter = substr($command, 2, -1);
+        $delimeter = substr($command, 2, -1);
+        $this->changeDelimeter($delimeter);
 
         return $numbers;
+    }
+
+    /**
+     * Handles validating and changing delimeter.
+     *
+     * @param string $delimeter raw delimeter to be validated and changed
+     */
+    private function changeDelimeter(string $delimeter): void
+    {
+        if (strlen($delimeter) > 1) {
+            if (preg_match(self::LONG_DELIMETER_FORMAT, $delimeter)) {
+                // Remove brackets.
+                $this->delimeter = substr($delimeter, 1, -1);
+            } else {
+                throw new InvalidArgumentException();
+            }
+        } else {
+            $this->delimeter = $delimeter;
+        }
     }
 }

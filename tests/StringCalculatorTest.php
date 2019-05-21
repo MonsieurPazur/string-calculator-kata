@@ -117,8 +117,8 @@ class StringCalculatorTest extends TestCase
             'expected' => 3
         ];
         yield 'custom long delimeter' => [
-            'string' => "//;abc[\n6;abc[5",
-            'expected' => 11
+            'string' => "//[***]\n1***2***3",
+            'expected' => 6
         ];
     }
 
@@ -136,6 +136,10 @@ class StringCalculatorTest extends TestCase
         ];
         yield 'all commas' => [
             'string' => ',,,,,',
+            'expected' => InvalidArgumentException::class
+        ];
+        yield 'custom long delimeter without format' => [
+            'string' => "//;abc[\n6;abc[5",
             'expected' => InvalidArgumentException::class
         ];
     }
