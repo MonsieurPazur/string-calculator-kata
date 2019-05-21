@@ -8,6 +8,7 @@ namespace Test;
 
 use App\Calculator;
 use Generator;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -44,6 +45,20 @@ class StringCalculatorTest extends TestCase
     }
 
     /**
+     * Tests invalid input.
+     *
+     * @dataProvider invalidAddProvider
+     *
+     * @param string $string invalid numbers (if any)
+     * @param string $expected exception class
+     */
+    public function testInvalidAdd(string $string, string $expected)
+    {
+        $this->expectException($expected);
+        $this->calculator->add($string);
+    }
+
+    /**
      * Provides test data for additions tests.
      * Input string and expected value after calculating.
      *
@@ -67,10 +82,6 @@ class StringCalculatorTest extends TestCase
             'string' => '1,2,4,7,8,11',
             'expected' => 33
         ];
-        yield 'all commas' => [
-            'string' => ',,,,,',
-            'expected' => 0
-        ];
         yield 'non-integer' => [
             'string' => '1.9',
             'expected' => 1
@@ -86,6 +97,24 @@ class StringCalculatorTest extends TestCase
         yield 'new line delimeter' => [
             'string' => "1\n2,3",
             'expected' => 6
+        ];
+    }
+
+    /**
+     * Provides test data with invalid input strings.
+     * Input string and expected exception class.
+     *
+     * @return Generator
+     */
+    public function invalidAddProvider()
+    {
+        yield 'empty arguments' => [
+            'string' => "1,\n",
+            'expected' => InvalidArgumentException::class
+        ];
+        yield 'all commas' => [
+            'string' => ',,,,,',
+            'expected' => InvalidArgumentException::class
         ];
     }
 }

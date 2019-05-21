@@ -6,6 +6,8 @@
 
 namespace App;
 
+use InvalidArgumentException;
+
 /**
  * Class Calculator
  *
@@ -32,6 +34,10 @@ class Calculator
      */
     public function add(string $numbers): int
     {
+        // Specific case.
+        if ('' === $numbers) {
+            return 0;
+        }
         $numbers = $this->prepareNumbers($numbers);
         $sum = 0;
         foreach ($numbers as $number) {
@@ -53,9 +59,25 @@ class Calculator
             $numbers = str_replace($delimeter, self::MAIN_STRING_DELIMETER, $numbers);
         }
         $numbers = explode(self::MAIN_STRING_DELIMETER, $numbers);
+        $this->validateNumbers($numbers);
         foreach ($numbers as &$number) {
             $number = (int)$number;
         }
         return $numbers;
+    }
+
+    /**
+     * Validates input numbers.
+     *
+     * @param array $numbers prepared (but not yet casted) numbers
+     */
+    private function validateNumbers(array $numbers): void
+    {
+        foreach ($numbers as $number) {
+            // We don't allow empty arguments.
+            if ('' === $number) {
+                throw new InvalidArgumentException();
+            }
+        }
     }
 }
