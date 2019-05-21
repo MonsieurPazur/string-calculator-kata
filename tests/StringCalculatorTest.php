@@ -67,6 +67,10 @@ class StringCalculatorTest extends TestCase
             'string' => '1,2,4,7,8,11',
             'expected' => 33
         ];
+        yield 'all commas' => [
+            'string' => ',,,,,',
+            'expected' => 0
+        ];
         yield 'non-integer' => [
             'string' => '1.9',
             'expected' => 1
@@ -78,6 +82,10 @@ class StringCalculatorTest extends TestCase
         yield 'high numbers' => [
             'string' => '456, 889',
             'expected' => 1345
+        ];
+        yield 'new line delimeter' => [
+            'string' => "1\n2,3",
+            'expected' => 6
         ];
     }
 }

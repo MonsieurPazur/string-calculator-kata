@@ -14,9 +14,14 @@ namespace App;
 class Calculator
 {
     /**
-     * @var string delimeter for splitting numbers in strings
+     * @var string main delimeter for splitting numbers in strings
      */
-    const STRING_DELIMETER = ',';
+    const MAIN_STRING_DELIMETER = ',';
+
+    /**
+     * @var string[] all additional delimeters for spliiting numbers
+     */
+    const STRING_DELIMETERS = ["\n"];
 
     /**
      * Adds comma separated numbers.
@@ -27,11 +32,30 @@ class Calculator
      */
     public function add(string $numbers): int
     {
-        $numbers = explode(self::STRING_DELIMETER, $numbers);
+        $numbers = $this->prepareNumbers($numbers);
         $sum = 0;
         foreach ($numbers as $number) {
-            $sum += (int)$number;
+            $sum += $number;
         }
         return $sum;
+    }
+
+    /**
+     * Prepares numbers by splitting input string into array of ints.
+     *
+     * @param string $numbers raw input string
+     *
+     * @return array prepared and casted to ints numbers
+     */
+    private function prepareNumbers(string $numbers): array
+    {
+        foreach (self::STRING_DELIMETERS as $delimeter) {
+            $numbers = str_replace($delimeter, self::MAIN_STRING_DELIMETER, $numbers);
+        }
+        $numbers = explode(self::MAIN_STRING_DELIMETER, $numbers);
+        foreach ($numbers as &$number) {
+            $number = (int)$number;
+        }
+        return $numbers;
     }
 }
