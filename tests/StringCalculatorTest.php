@@ -59,5 +59,9 @@ class StringCalculatorTest extends TestCase
             'string' => '1',
             'expected' => 1
         ];
+        yield 'two numbers' => [
+            'string' => '1,2',
+            'expected' => 3
+        ];
     }
 }

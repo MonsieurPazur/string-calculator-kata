@@ -13,6 +13,10 @@ namespace App;
  */
 class Calculator
 {
+    /**
+     * @var string delimeter for splitting numbers in strings
+     */
+    const STRING_DELIMETER = ',';
 
     /**
      * Adds two comma separated numbers.
@@ -23,6 +27,11 @@ class Calculator
      */
     public function add(string $numbers): int
     {
-        return (int)$numbers;
+        $numbers = explode(self::STRING_DELIMETER, $numbers);
+        if (isset($numbers[1])) {
+            return (int)$numbers[0] + (int)$numbers[1];
+        } else {
+            return (int)$numbers[0];
+        }
     }
 }
