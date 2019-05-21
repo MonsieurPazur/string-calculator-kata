@@ -7,6 +7,7 @@
 namespace App;
 
 use App\Exception\NegativeArgumentException;
+use App\Logger\Logger;
 use InvalidArgumentException;
 
 /**
@@ -47,11 +48,19 @@ class Calculator
     private $delimeters;
 
     /**
-     * Calculator constructor.
+     * @var Logger $logger used to log calculation results
      */
-    public function __construct()
+    private $logger;
+
+    /**
+     * Calculator constructor.
+     *
+     * @param Logger|null $logger
+     */
+    public function __construct(Logger $logger = null)
     {
         $this->delimeters[] = self::DEFAULT_DELIMETER;
+        $this->logger = $logger;
     }
 
     /**
@@ -74,6 +83,7 @@ class Calculator
                 $sum += $number;
             }
         }
+        $this->log($sum);
         return $sum;
     }
 
@@ -204,5 +214,17 @@ class Calculator
             $subDelimeter .= $char;
         }
         return $delimeters;
+    }
+
+    /**
+     * Wrapper for logging method.
+     *
+     * @param int $result calculation result
+     */
+    private function log(int $result)
+    {
+        if (!is_null($this->logger)) {
+            $this->logger->log((string)$result);
+        }
     }
 }
