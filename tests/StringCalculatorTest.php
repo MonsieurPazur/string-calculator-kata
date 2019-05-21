@@ -8,7 +8,6 @@ namespace Test;
 
 use App\Calculator;
 use Generator;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,15 +44,6 @@ class StringCalculatorTest extends TestCase
     }
 
     /**
-     * Test addition against invalid input data.
-     */
-    public function testInvalidAdd()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->calculator->add(',,');
-    }
-
-    /**
      * Provides test data for additions tests.
      * Input string and expected value after calculating.
      *
@@ -73,9 +63,21 @@ class StringCalculatorTest extends TestCase
             'string' => '1,2',
             'expected' => 3
         ];
+        yield 'more numbers' => [
+            'string' => '1,2,4,7,8,11',
+            'expected' => 33
+        ];
         yield 'non-integer' => [
             'string' => '1.9',
             'expected' => 1
+        ];
+        yield 'negative numbers' => [
+            'string' => '-4,-9',
+            'expected' => -13
+        ];
+        yield 'high numbers' => [
+            'string' => '456, 889',
+            'expected' => 1345
         ];
     }
 }
