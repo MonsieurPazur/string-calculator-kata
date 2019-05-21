@@ -41,16 +41,16 @@ class Calculator
     const LONG_DELIMETER_FORMAT = '/^(\[.*\])$/';
 
     /**
-     * @var string $delimeter addition, custom delimeter, that may get changed
+     * @var string[] $delimeters additional, custom delimeters, that may get changed
      */
-    private $delimeter;
+    private $delimeters;
 
     /**
      * Calculator constructor.
      */
     public function __construct()
     {
-        $this->delimeter = self::DEFAULT_DELIMETER;
+        $this->delimeters[] = self::DEFAULT_DELIMETER;
     }
 
     /**
@@ -88,8 +88,10 @@ class Calculator
         // First we remove (optional) custom delimeter command and change delimeter.
         $numbers = $this->handleCustomDelimeter($numbers);
 
-        // Next we unify both delimeters into main.
-        $numbers = str_replace($this->delimeter, self::MAIN_STRING_DELIMETER, $numbers);
+        // Next we unify all delimeters into main.
+        foreach ($this->delimeters as $delimeter) {
+            $numbers = str_replace($delimeter, self::MAIN_STRING_DELIMETER, $numbers);
+        }
 
         // Lastly we explode numbers string into array.
         $numbers = explode(self::MAIN_STRING_DELIMETER, $numbers);
@@ -160,13 +162,46 @@ class Calculator
     {
         if (strlen($delimeter) > 1) {
             if (preg_match(self::LONG_DELIMETER_FORMAT, $delimeter)) {
-                // Remove brackets.
-                $this->delimeter = substr($delimeter, 1, -1);
+                // Splitting delimeter into sub delimeters and storing them.
+                $delimeters = $this->splitDelimeter($delimeter);
+                foreach ($delimeters as $subDelimeter) {
+                    $this->delimeters[] = $subDelimeter;
+                }
             } else {
                 throw new InvalidArgumentException();
             }
         } else {
-            $this->delimeter = $delimeter;
+            $this->delimeters[] = $delimeter;
         }
+    }
+
+    /**
+     * Splits delimeter into multiple sub delimeters.
+     *
+     * @param string $delimeter raw delimeter that may consist of sub delimeters
+     *
+     * @return array sub delimeters
+     */
+    private function splitDelimeter(string $delimeter): array
+    {
+        $delimeters = [];
+        $subDelimeter = '';
+
+        // We check each character individually.
+        foreach (str_split($delimeter) as $char) {
+            // Ignore opening brackets.
+            if ('[' === $char) {
+                continue;
+            }
+
+            // If closing brackets, we store current subDelimeter.
+            if (']' === $char) {
+                $delimeters[] = $subDelimeter;
+                $subDelimeter = '';
+                continue;
+            }
+            $subDelimeter .= $char;
+        }
+        return $delimeters;
     }
 }
