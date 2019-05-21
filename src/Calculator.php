@@ -26,6 +26,11 @@ class Calculator
     const DEFAULT_DELIMETER = "\n";
 
     /**
+     * @var int every number higher than that should be ignored in calculation
+     */
+    const MAXIMUM_NUMBER = 1000;
+
+    /**
      * @var string $delimeter addition, custom delimeter, that may get changed
      */
     private $delimeter;
@@ -54,7 +59,9 @@ class Calculator
         $numbers = $this->prepareNumbers($numbers);
         $sum = 0;
         foreach ($numbers as $number) {
-            $sum += $number;
+            if ($number <= self::MAXIMUM_NUMBER) {
+                $sum += $number;
+            }
         }
         return $sum;
     }

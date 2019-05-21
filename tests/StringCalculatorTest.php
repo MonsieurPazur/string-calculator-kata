@@ -104,6 +104,10 @@ class StringCalculatorTest extends TestCase
             'string' => '456, 889',
             'expected' => 1345
         ];
+        yield 'ignore numbers bigger then 1000' => [
+            'string' => '2,1001',
+            'expected' => 2
+        ];
         yield 'new line delimeter' => [
             'string' => "1\n2,3",
             'expected' => 6
