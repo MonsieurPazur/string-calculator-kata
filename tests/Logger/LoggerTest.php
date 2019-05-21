@@ -6,6 +6,7 @@
 
 namespace Test\Logger;
 
+use App\Logger\Logger;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,4 +16,41 @@ use PHPUnit\Framework\TestCase;
  */
 class LoggerTest extends TestCase
 {
+    /**
+     * @var string log file for testing
+     */
+    const TEST_FILE = __DIR__ . '/test.log';
+
+    /**
+     * @var Logger $logger object that we operate on
+     */
+    private $logger;
+
+    /**
+     * Sets up fresh logger for each test.
+     */
+    protected function setUp(): void
+    {
+        $this->logger = new Logger();
+    }
+
+    /**
+     * Tests whether logger creates desired file.
+     */
+    public function testLoggerFileExists()
+    {
+        $this->logger->log('some message', self::TEST_FILE);
+        $this->assertFileExists(self::TEST_FILE);
+    }
+
+    /**
+     * Removes test file.
+     */
+    protected function tearDown(): void
+    {
+        if (file_exists(self::TEST_FILE)) {
+            unlink(self::TEST_FILE);
+        }
+    }
+
 }
