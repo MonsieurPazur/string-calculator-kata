@@ -35,7 +35,7 @@ class Logger
         $filename = $filename ?: $this->getFilename();
 
         $handle = fopen($filename, 'a');
-        fwrite($handle, $message);
+        fwrite($handle, $message . PHP_EOL);
         fclose($handle);
     }
 

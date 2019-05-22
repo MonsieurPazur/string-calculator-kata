@@ -52,7 +52,7 @@ class LoggerTest extends TestCase
 
         $handle = fopen(self::TEST_FILE, 'r');
         $line = fgets($handle);
-        $this->assertEquals('some message', $line);
+        $this->assertEquals('some message' . PHP_EOL, $line);
         fclose($handle);
     }
 
