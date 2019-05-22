@@ -7,6 +7,7 @@
 namespace Test\Logger;
 
 use App\Logger\Logger;
+use Generator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,15 +46,41 @@ class LoggerTest extends TestCase
 
     /**
      * Tests whether logger writes messages to file.
+     *
+     * @dataProvider messagesProvider
+     *
+     * @param array $messages list of messages to be written to file
+     * @param string $expected content of that file after logging
      */
-    public function testLoggerWritesMessages()
+    public function testLoggerWritesMessages(array $messages, string $expected)
     {
-        $this->logger->log('some message', self::TEST_FILE);
+        foreach ($messages as $message) {
+            $this->logger->log($message, self::TEST_FILE);
+        }
+        $this->assertEquals($expected, file_get_contents(self::TEST_FILE));
+    }
 
-        $handle = fopen(self::TEST_FILE, 'r');
-        $line = fgets($handle);
-        $this->assertEquals('some message' . PHP_EOL, $line);
-        fclose($handle);
+    /**
+     * Provides test data for logging messages to file.
+     * Input is an array of messages and then expected is content of that file.
+     *
+     * @return Generator
+     */
+    public function messagesProvider()
+    {
+        yield 'single line' => [
+            'messages' => [
+                'some message'
+            ],
+            'expected' => 'some message' . PHP_EOL
+        ];
+        yield 'multi line' => [
+            'messages' => [
+                'some message',
+                'another message'
+            ],
+            'expected' => 'some message' . PHP_EOL . 'another message' . PHP_EOL
+        ];
     }
 
     /**
