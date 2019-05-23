@@ -8,6 +8,8 @@ namespace App\Calculator;
 
 use App\Exception\NegativeArgumentException;
 use App\Logger\LoggerInterface;
+use App\WebService\WebServiceInterface;
+use Exception;
 use InvalidArgumentException;
 
 /**
@@ -53,14 +55,21 @@ class Calculator
     private $logger;
 
     /**
+     * @var WebServiceInterface $webService used to notify about any errors
+     */
+    private $webService;
+
+    /**
      * Calculator constructor.
      *
      * @param LoggerInterface|null $logger
+     * @param WebServiceInterface|null $webService
      */
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(LoggerInterface $logger = null, WebServiceInterface $webService = null)
     {
         $this->delimeters[] = self::DEFAULT_DELIMETER;
         $this->logger = $logger;
+        $this->webService = $webService;
     }
 
     /**
@@ -224,7 +233,13 @@ class Calculator
     private function log(int $result)
     {
         if (!is_null($this->logger)) {
-            $this->logger->log((string)$result);
+            try {
+                $this->logger->log((string)$result);
+            } catch (Exception $e) {
+                if (!is_null($this->webService)) {
+                    $this->webService->notify('Logging has failed: ' . $e->getMessage());
+                }
+            }
         }
     }
 }
