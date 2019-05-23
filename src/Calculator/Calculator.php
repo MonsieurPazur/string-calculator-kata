@@ -7,7 +7,7 @@
 namespace App\Calculator;
 
 use App\Exception\NegativeArgumentException;
-use App\Logger\Logger;
+use App\Logger\LoggerInterface;
 use InvalidArgumentException;
 
 /**
@@ -48,16 +48,16 @@ class Calculator
     private $delimeters;
 
     /**
-     * @var Logger $logger used to log calculation results
+     * @var LoggerInterface $logger used to log calculation results
      */
     private $logger;
 
     /**
      * Calculator constructor.
      *
-     * @param Logger|null $logger
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(Logger $logger = null)
+    public function __construct(LoggerInterface $logger = null)
     {
         $this->delimeters[] = self::DEFAULT_DELIMETER;
         $this->logger = $logger;

@@ -7,7 +7,7 @@
 namespace Test\Calculator;
 
 use App\Calculator\Calculator;
-use App\Logger\Logger;
+use App\Logger\LoggerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
@@ -20,7 +20,7 @@ use ReflectionException;
 class StringCalculatorLoggingTest extends TestCase
 {
     /**
-     * @var MockObject|Logger $logger mock
+     * @var MockObject|LoggerInterface $logger mock
      */
     private $logger;
 
@@ -36,7 +36,7 @@ class StringCalculatorLoggingTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->logger = $this->getMockBuilder(Logger::class)
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)
             ->setMethods(['log'])
             ->getMock();
         $this->calculator = new Calculator($this->logger);

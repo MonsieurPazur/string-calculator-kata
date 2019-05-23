@@ -11,7 +11,7 @@ namespace App\Logger;
  *
  * @package App\Logger
  */
-class Logger
+class Logger implements LoggerInterface
 {
     /**
      * @var string extension used for log files
