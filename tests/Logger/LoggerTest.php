@@ -8,6 +8,9 @@ namespace Test\Logger;
 
 use App\Logger\Logger;
 use Generator;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,14 +21,19 @@ use PHPUnit\Framework\TestCase;
 class LoggerTest extends TestCase
 {
     /**
-     * @var string log file for testing
-     */
-    const TEST_FILE = __DIR__ . '/test.log';
-
-    /**
      * @var Logger $logger object that we operate on
      */
     private $logger;
+
+    /**
+     * @var vfsStreamDirectory $root main dir for log files
+     */
+    private $root;
+
+    /**
+     * @var vfsStreamFile $file log file
+     */
+    private $file;
 
     /**
      * Sets up fresh logger for each test.
@@ -33,6 +41,8 @@ class LoggerTest extends TestCase
     protected function setUp(): void
     {
         $this->logger = new Logger();
+        $this->root = vfsStream::setup('logs');
+        $this->file = vfsStream::newFile('test.log')->at($this->root);
     }
 
     /**
@@ -40,8 +50,8 @@ class LoggerTest extends TestCase
      */
     public function testLoggerFileExists()
     {
-        $this->logger->log('some message', self::TEST_FILE);
-        $this->assertFileExists(self::TEST_FILE);
+        $this->logger->log('some message', $this->file->url());
+        $this->assertFileExists($this->file->url());
     }
 
     /**
@@ -55,9 +65,9 @@ class LoggerTest extends TestCase
     public function testLoggerWritesMessages(array $messages, string $expected)
     {
         foreach ($messages as $message) {
-            $this->logger->log($message, self::TEST_FILE);
+            $this->logger->log($message, $this->file->url());
         }
-        $this->assertEquals($expected, file_get_contents(self::TEST_FILE));
+        $this->assertEquals($expected, file_get_contents($this->file->url()));
     }
 
     /**
@@ -88,9 +98,6 @@ class LoggerTest extends TestCase
      */
     protected function tearDown(): void
     {
-        if (file_exists(self::TEST_FILE)) {
-            unlink(self::TEST_FILE);
-        }
+        $this->root->removeChild('test.log');
     }
-
 }
