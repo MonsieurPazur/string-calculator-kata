@@ -16,12 +16,12 @@ class Logger implements LoggerInterface
     /**
      * @var string extension used for log files
      */
-    const FILE_EXTENSION = '.log';
+    public const FILE_EXTENSION = '.log';
 
     /**
      * @var string location where we store our logs
      */
-    const LOG_DIR = __DIR__ . '/../../logs/';
+    public const LOG_DIR = __DIR__ . '/../../logs/';
 
     /**
      * Logs given message.
@@ -34,7 +34,7 @@ class Logger implements LoggerInterface
         // Logger will log to default file if we won't force it.
         $filename = $filename ?: $this->getFilename();
 
-        $handle = fopen($filename, 'a');
+        $handle = fopen($filename, 'ab');
         fwrite($handle, $message . PHP_EOL);
         fclose($handle);
     }

@@ -48,7 +48,7 @@ class LoggerTest extends TestCase
     /**
      * Tests whether logger creates desired file.
      */
-    public function testLoggerFileExists()
+    public function testLoggerFileExists(): void
     {
         $this->logger->log('some message', $this->file->url());
         $this->assertFileExists($this->file->url());
@@ -62,7 +62,7 @@ class LoggerTest extends TestCase
      * @param array $messages list of messages to be written to file
      * @param string $expected content of that file after logging
      */
-    public function testLoggerWritesMessages(array $messages, string $expected)
+    public function testLoggerWritesMessages(array $messages, string $expected): void
     {
         foreach ($messages as $message) {
             $this->logger->log($message, $this->file->url());
@@ -76,7 +76,7 @@ class LoggerTest extends TestCase
      *
      * @return Generator
      */
-    public function messagesProvider()
+    public function messagesProvider(): Generator
     {
         yield 'single line' => [
             'messages' => [

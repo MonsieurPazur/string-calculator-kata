@@ -39,7 +39,7 @@ class StringCalculatorTest extends TestCase
      * @param string $string given string with values
      * @param int $expected sum of given numbers
      */
-    public function testAdd(string $string, int $expected)
+    public function testAdd(string $string, int $expected): void
     {
         $this->assertEquals($expected, $this->calculator->add($string));
     }
@@ -52,7 +52,7 @@ class StringCalculatorTest extends TestCase
      * @param string $string invalid numbers (if any)
      * @param string $expected exception class
      */
-    public function testInvalidAdd(string $string, string $expected)
+    public function testInvalidAdd(string $string, string $expected): void
     {
         $this->expectException($expected);
         $this->calculator->add($string);
@@ -66,7 +66,7 @@ class StringCalculatorTest extends TestCase
      * @param string $string input with negative numbers
      * @param string $expected exception message
      */
-    public function testNegativeAdd(string $string, string $expected)
+    public function testNegativeAdd(string $string, string $expected): void
     {
         $this->expectExceptionMessage($expected);
         $this->calculator->add($string);
@@ -78,7 +78,7 @@ class StringCalculatorTest extends TestCase
      *
      * @return Generator
      */
-    public function addProvider()
+    public function addProvider(): Generator
     {
         yield 'empty string' => [
             'string' => '',
@@ -136,7 +136,7 @@ class StringCalculatorTest extends TestCase
      *
      * @return Generator
      */
-    public function invalidAddProvider()
+    public function invalidAddProvider(): Generator
     {
         yield 'empty arguments' => [
             'string' => "1,\n",
@@ -158,10 +158,10 @@ class StringCalculatorTest extends TestCase
      *
      * @return Generator
      */
-    public function negativeDataProvider()
+    public function negativeDataProvider(): Generator
     {
         yield 'single negative' => [
-            'string' => "-1",
+            'string' => '-1',
             'expected' => 'Negatives not allowed: -1'
         ];
         yield 'multiple negatives' => [

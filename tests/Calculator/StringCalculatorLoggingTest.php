@@ -55,7 +55,7 @@ class StringCalculatorLoggingTest extends TestCase
     /**
      * Tests whether we called log method or not.
      */
-    public function testLoggingAdd()
+    public function testLoggingAdd(): void
     {
         $this->logger->expects($this->once())
             ->method('log')
@@ -66,7 +66,7 @@ class StringCalculatorLoggingTest extends TestCase
     /**
      * Tests wheter we notified web service about logger error or not.
      */
-    public function testLoggingException()
+    public function testLoggingException(): void
     {
         $this->logger->expects($this->once())
             ->method('log')

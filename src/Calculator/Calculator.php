@@ -22,27 +22,27 @@ class Calculator
     /**
      * @var string main delimeter for splitting numbers in strings
      */
-    const MAIN_STRING_DELIMETER = ',';
+    public const MAIN_STRING_DELIMETER = ',';
 
     /**
      * @var string delimeter used as default additional delimeter
      */
-    const DEFAULT_DELIMETER = "\n";
+    public const DEFAULT_DELIMETER = "\n";
 
     /**
      * @var int every number higher than that should be ignored in calculation
      */
-    const MAXIMUM_NUMBER = 1000;
+    public const MAXIMUM_NUMBER = 1000;
 
     /**
      * @var string when at the beginning of input, informs us about delimeter change
      */
-    const DELIMETER_COMMAND = '//';
+    public const DELIMETER_COMMAND = '//';
 
     /**
      * @var string delimeter can be of any length, but has to follow format: [delimeter]
      */
-    const LONG_DELIMETER_FORMAT = '/^(\[.*\])$/';
+    public const LONG_DELIMETER_FORMAT = '/^(\[.*\])$/';
 
     /**
      * @var string[] $delimeters additional, custom delimeters, that may get changed
@@ -85,9 +85,9 @@ class Calculator
         if ('' === $numbers) {
             return 0;
         }
-        $numbers = $this->prepareNumbers($numbers);
+        $numbersArr = $this->prepareNumbers($numbers);
         $sum = 0;
-        foreach ($numbers as $number) {
+        foreach ($numbersArr as $number) {
             if ($number <= self::MAXIMUM_NUMBER) {
                 $sum += $number;
             }
@@ -114,12 +114,12 @@ class Calculator
         }
 
         // Lastly we explode numbers string into array.
-        $numbers = explode(self::MAIN_STRING_DELIMETER, $numbers);
+        $numbersArr = explode(self::MAIN_STRING_DELIMETER, $numbers);
         $this->validateNumbers($numbers);
-        foreach ($numbers as &$number) {
+        foreach ($numbersArr as &$number) {
             $number = (int)$number;
         }
-        return $numbers;
+        return $numbersArr;
     }
 
     /**
@@ -133,7 +133,7 @@ class Calculator
         foreach ($numbers as $number) {
             // We don't allow empty arguments.
             if ('' === $number) {
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException('Empty argument is not allowed.');
             }
 
             // Also don't allow negative numbers.
@@ -156,7 +156,7 @@ class Calculator
     private function handleCustomDelimeter(string $numbers): string
     {
         // If there's no command, we simply return $numbers unchanged.
-        if (self::DELIMETER_COMMAND !== substr($numbers, 0, 2)) {
+        if (0 !== strpos($numbers, self::DELIMETER_COMMAND)) {
             return $numbers;
         }
 
@@ -188,7 +188,7 @@ class Calculator
                     $this->delimeters[] = $subDelimeter;
                 }
             } else {
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException('Incorrect long delimiter format.');
             }
         } else {
             $this->delimeters[] = $delimeter;
@@ -232,11 +232,11 @@ class Calculator
      */
     private function log(int $result)
     {
-        if (!is_null($this->logger)) {
+        if (null !== $this->logger) {
             try {
                 $this->logger->log((string)$result);
             } catch (Exception $e) {
-                if (!is_null($this->webService)) {
+                if (null !== $this->webService) {
                     $this->webService->notify('Logging has failed: ' . $e->getMessage());
                 }
             }
